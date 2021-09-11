@@ -55,10 +55,11 @@ public class Panel {
         g.drawString(ordinal(ranking), panel_left + 14, panel_top + 43);
 
         // Display the player's current item, if any
-        int itemId = item.getItemId();
-        if (item != null && 
-        		(itemId != ItemData.TOMATO_PROJ || itemId != ItemData.OILSLICK)) {
-            item.drawImage(panel_left + 32, panel_top, null);
+        if (item != null) {
+        	int itemId = item.getItemId();
+        	if (itemId != ItemData.TOMATO_PROJ || itemId != ItemData.OILSLICK) {
+        		item.drawImage(panel_left + 32, panel_top, null);
+        	}
         }
     }
 }
