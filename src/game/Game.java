@@ -1,6 +1,7 @@
 /* SWEN20003 Object Oriented Software Development
  * Shadow Kart
- * Author: Matt Giuca <mgiuca>
+ * Author: Matt Giuca
+ *         Jiayu Li
  */
 
 package game;
@@ -12,90 +13,68 @@ import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Input;
 
-/** Main class for the Shadow Kart Game engine.
- * Handles initialisation, input and rendering.
- */
-public class Game extends BasicGame
-{
-    /** Location of the "assets" directory. */
-    public static final String ASSETS_PATH = "assets";
+import gameData.GameData;
 
-    /** The game state. */
+// Main class for the Shadow Kart Game engine. 
+// Handles initialisation, input and rendering
+public class Game extends BasicGame {
+    
+    // The game state
     private World world;
 
-    /** Screen width, in pixels. */
-    public static final int SCREENWIDTH = 800;
-    /** Screen height, in pixels. */
-    public static final int SCREENHEIGHT = 600;
-
-    /** Create a new Game object. */
-    public Game()
-    {
+    // Create a new Game object
+    public Game() {
         super("Shadow Kart");
     }
 
-    /** Initialise the game state.
-     * @param gc The Slick game container object.
-     */
+    // Initialise the game state
     @Override
-    public void init(GameContainer gc)
-    throws SlickException
-    {
+    public void init(GameContainer gc) throws SlickException {
         world = new World();
     }
 
-    /** Update the game state for a frame.
-     * @param gc The Slick game container object.
-     * @param delta Time passed since last frame (milliseconds).
-     */
+    // Update the game state for a frame.
+    // delta is the time passed since last frame in milliseconds.
     @Override
-    public void update(GameContainer gc, int delta)
-    throws SlickException
-    {
+    public void update(GameContainer gc, int delta) throws SlickException {
         // Get data about the current input (keyboard state).
         Input input = gc.getInput();
 
         // Update the player's rotation and position based on key presses.
         double rotate_dir = 0;
         double move_dir = 0;
-        if (input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_S))
+        if (input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_S)) {
             move_dir -= 1;
-        if (input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_W))
+        }
+        if (input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_W)) {
             move_dir += 1;
-        if (input.isKeyDown(Input.KEY_LEFT) || input.isKeyDown(Input.KEY_A))
+        }
+        if (input.isKeyDown(Input.KEY_LEFT) || input.isKeyDown(Input.KEY_A)) {
             rotate_dir -= 1;
-        if (input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_D))
+        }
+        if (input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_D)) {
             rotate_dir += 1;
-        boolean use_item = input.isKeyDown(Input.KEY_LCONTROL) ||
-            input.isKeyDown(Input.KEY_RCONTROL);
+        }
+        boolean use_item = input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL);
 
         // Let World.update decide what to do with this data.
-        for (int i=0; i<delta; i++)
+        for (int i=0; i<delta; i++) {
             world.update(rotate_dir, move_dir, use_item);
+        }
     }
 
-    /** Render the entire screen, so it reflects the current game state.
-     * @param gc The Slick game container object.
-     * @param g The Slick graphics object, used for drawing.
-     */
+    // Render the entire screen so it reflects the current game state.
     @Override
-    public void render(GameContainer gc, Graphics g)
-    throws SlickException
-    {
+    public void render(GameContainer gc, Graphics g) throws SlickException {
         // Let World.render handle the rendering.
         world.render(g);
     }
 
-    /** Start-up method. Creates the game and runs it.
-     * @param args Command-line arguments (ignored).
-     */
-    public static void main(String[] args)
-    throws SlickException
-    {
+    // Start-up method. Creates the game and runs it.
+    public static void main(String[] args) throws SlickException {
         AppGameContainer app = new AppGameContainer(new Game());
-        // setShowFPS(true), to show frames-per-second.
-        app.setShowFPS(false);
-        app.setDisplayMode(SCREENWIDTH, SCREENHEIGHT, false);
+        app.setShowFPS(false); // setShowFPS(true) to show frames-per-second.
+        app.setDisplayMode(GameData.SCREENWIDTH, GameData.SCREENHEIGHT, false);
         app.start();
     }
 }
