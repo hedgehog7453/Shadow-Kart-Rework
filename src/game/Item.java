@@ -7,11 +7,13 @@ package game;
 
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Graphics;
 
 import gameData.GameData;
 import gameData.ItemData;
-
-import org.newdawn.slick.Graphics;
+import gameData.KartData;
+import helpers.Angle;
+import helpers.Calculator;
 
 // Represent an item
 public class Item extends GameObject {
@@ -26,11 +28,9 @@ public class Item extends GameObject {
 	
 	// Create a new item. 
 	public Item(int itemIndex, int itemX, int itemY, int itemId, String imgPath) throws SlickException {
+		super(itemX, itemY, imgPath);
 		this.itemIndex = itemIndex;
-		this.x = itemX;
-		this.y = itemY;
 		this.itemId = itemId;
-		this.img = new Image(imgPath);
 		this.exist = true;
 	}
 	
@@ -52,7 +52,7 @@ public class Item extends GameObject {
 	// Use the item. 
 	public void useItem(World world, Player player) throws SlickException {
 		if (itemId == ItemData.BOOST) {
-			player.setBoostTime(ItemData.BOOST_TIME);
+			player.setBoostTime(KartData.BOOST_TIME);
 			player.setItem(null);
 		}
 		else if (itemId == ItemData.TOMATO) {
@@ -67,7 +67,7 @@ public class Item extends GameObject {
 	
 	// Check if the distance between item and a particular point is less than 40.
 	private boolean checkDistance(World world, double pointX, double pointY) {
-		double distance = world.calcDistance(pointX, pointY, x, y);
+		double distance = Calculator.calcDistance(pointX, pointY, x, y);
 		if (distance < GameData.DISTANCE) {
 			return true;
 		} else {
@@ -81,7 +81,7 @@ public class Item extends GameObject {
 		// and the item is not a hazard, the player can pick up the item.
 		if (checkDistance(world, player.getX(), player.getY())) {
 			if (itemId == ItemData.OILSLICK) {
-				player.setSpinTime(ItemData.SPIN_TIME);
+				player.setSpinTime(KartData.SPIN_TIME);
 			} else {
 				player.setItem(this);
 			}
@@ -92,16 +92,16 @@ public class Item extends GameObject {
 		// (which is less than 40 pixels away from the oil slick) to spin. 
 		if (itemId == ItemData.OILSLICK) {
 			if (checkDistance(world, player.getX(), player.getY())) {
-				player.setSpinTime(ItemData.SPIN_TIME);
+				player.setSpinTime(KartData.SPIN_TIME);
 				exist = false;
 			} else if (checkDistance(world, elephant.getX(), elephant.getY())) {
-				elephant.setSpinTime(ItemData.SPIN_TIME);
+				elephant.setSpinTime(KartData.SPIN_TIME);
 				exist = false;
 			} else if (checkDistance(world, dog.getX(), dog.getY())) {
-				dog.setSpinTime(ItemData.SPIN_TIME);
+				dog.setSpinTime(KartData.SPIN_TIME);
 				exist = false;
 			} else if (checkDistance(world, octopus.getX(), octopus.getY())) {
-				octopus.setSpinTime(ItemData.SPIN_TIME);
+				octopus.setSpinTime(KartData.SPIN_TIME);
 				exist = false;
 			}
 		}
@@ -117,16 +117,16 @@ public class Item extends GameObject {
 		
 		// If the tomato hits a kart, set the kart to spin and remove the projectile tomato. 
 		if (checkDistance(world, player.getX(), player.getY())) {
-			player.setSpinTime(ItemData.SPIN_TIME);
+			player.setSpinTime(KartData.SPIN_TIME);
 			exist = false;
 		} else if (checkDistance(world, elephant.getX(), elephant.getY())) {
-			elephant.setSpinTime(ItemData.SPIN_TIME);
+			elephant.setSpinTime(KartData.SPIN_TIME);
 			exist = false;
 		} else if (checkDistance(world, dog.getX(), dog.getY())) {
-			dog.setSpinTime(ItemData.SPIN_TIME);
+			dog.setSpinTime(KartData.SPIN_TIME);
 			exist = false;
 		} else if (checkDistance(world, octopus.getX(), octopus.getY())) {
-			octopus.setSpinTime(ItemData.SPIN_TIME);
+			octopus.setSpinTime(KartData.SPIN_TIME);
 			exist = false;
 		} else if (world.blockingAt((int) nextX, (int) nextY)) {
 			// If the tomato hits a blocking tile, set the existence of the tomato to false.
@@ -162,7 +162,7 @@ public class Item extends GameObject {
 		if (itemId == ItemData.TOMATO) {
 			x = player.getX() + rotation.getXComponent(GameData.PLACE_ITEM_DISTANCE);
 			y = player.getY() + rotation.getYComponent(GameData.PLACE_ITEM_DISTANCE);
-			img = new Image(world.findImgPath(ItemData.TOMATO_PROJ));
+			img = new Image(ItemData.getItemImgPath(ItemData.TOMATO_PROJ));
 			this.itemId = ItemData.TOMATO_PROJ;
 		} else if (itemId==ItemData.OILCAN) {
 			double radians = rotation.getRadians();
@@ -170,7 +170,7 @@ public class Item extends GameObject {
 			Angle newAngle = new Angle(reversedRadians);
 			x = player.getX() + newAngle.getXComponent(GameData.PLACE_ITEM_DISTANCE);
 			y = player.getY() + newAngle.getYComponent(GameData.PLACE_ITEM_DISTANCE);
-			img = new Image(world.findImgPath(ItemData.OILSLICK));
+			img = new Image(ItemData.getItemImgPath(ItemData.OILSLICK));
 			this.itemId = ItemData.OILSLICK;
 		}
 		exist = true;

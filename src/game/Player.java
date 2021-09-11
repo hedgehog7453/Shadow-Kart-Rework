@@ -7,8 +7,10 @@ package game;
 
 import org.newdawn.slick.SlickException;
 
-import gameData.ItemData;
 import gameData.KartData;
+import gameData.KartData.Animal;
+import helpers.Angle;
+import helpers.Calculator;
 
 // The player's kart (Donkey).
 public class Player extends Kart {
@@ -17,10 +19,10 @@ public class Player extends Kart {
     private Item item;
     
     // Creates a new Player.
-    public Player(double x, double y, Angle angle, String imgPath) throws SlickException {
-        super(x, y, angle, imgPath);
+    public Player() throws SlickException {
+        super(Animal.DONKEY, Angle.fromDegrees(0));
         this.item = null;
-        this.boostTime = ItemData.BOOST_TIME+1;
+        this.boostTime = KartData.BOOST_TIME + 1;
     }
 
     // The item which the player is currently holding
@@ -34,13 +36,17 @@ public class Player extends Kart {
     }
     
     // Update the player for a frame.
-    public void update(double rotate_dir, double move_dir, World world, 
-    		Elephant elephant, Dog dog, Octopus octopus) {
+    public void update(double rotate_dir, double move_dir, World world) {
+    	
+    	Elephant elephant = world.getElephant();
+    	Dog dog = world.getDog();
+    	Octopus octopus = world.getOctopus();
+    	
         // Modify the player's angle
     	boolean spinPlayer = spin(world);
     	double rotateSpeed = spinPlayer ? KartData.ROTATE_SPEED_SPIN : KartData.ROTATE_SPEED * rotate_dir;
     	Angle rotateamount = new Angle(rotateSpeed);
-        this.angle = this.angle.add(rotateamount);
+        this.orientation = this.orientation.add(rotateamount);
         // Determine the friction of the current location
         double friction = world.frictionAt((int) this.x, (int) this.y);
         // Update the player's velocity
@@ -59,14 +65,14 @@ public class Player extends Kart {
         // Update the position based on velocity
         double amount = this.velocity; // calculate the amount to move in each direction
         // Compute the next position, but don't move there yet
-        double nextX = this.x + this.angle.getXComponent(amount);
-        double nextY = this.y + this.angle.getYComponent(amount);
+        double nextX = this.x + this.orientation.getXComponent(amount);
+        double nextY = this.y + this.orientation.getYComponent(amount);
         // If the intended destination is a blocking tile, do not move there.
         // instead, set velocity to 0
-        if (world.calcDistance(nextX, nextY, elephant.getX(), elephant.getY()) < KartData.COLLIDE_DISTANCE ||
-    		world.calcDistance(nextX, nextY, dog.getX(), dog.getY()) < KartData.COLLIDE_DISTANCE ||
-    		world.calcDistance(nextX, nextY, octopus.getX(), octopus.getY()) < KartData.COLLIDE_DISTANCE ||
-    		world.blockingAt((int) nextX, (int) nextY)) {
+        if (Calculator.calcDistance(nextX, nextY, elephant.getX(), elephant.getY()) < KartData.COLLIDE_DISTANCE ||
+        		Calculator.calcDistance(nextX, nextY, dog.getX(), dog.getY()) < KartData.COLLIDE_DISTANCE ||
+        		Calculator.calcDistance(nextX, nextY, octopus.getX(), octopus.getY()) < KartData.COLLIDE_DISTANCE ||
+        		world.blockingAt((int) nextX, (int) nextY)) {
             this.velocity = 0;
         } else {
             // move to the intended destination

@@ -4,7 +4,7 @@
  *         Jiayu Li
  */
 
-package game;
+package helpers;
 
 // Represents an angular measure.
 // The 0-degree angle represents north (the negative Y axis), with angles
@@ -19,16 +19,15 @@ public class Angle {
     private double radians;
 
     // ====================================================================================
-    // = Angle constructors
+    // = Constructors
     // ====================================================================================
     
     // Create an Angle with a value in radians. 
     // Automatically normalises the value so it lies between -Pi and Pi.
     public Angle(double radians) {
         radians %= TAU;
-        // Java performs truncated division, so the result will be in the
-        // range [-2*Pi, 2*Pi). If it is outside of the range [-Pi, Pi),
-        // adjust so it is in that range.
+        // Java performs truncated division, so the result will be in the range [-2*Pi, 2*Pi). 
+        // If it is outside of the range [-Pi, Pi), adjust so it is in that range.
         if (radians > Math.PI) {
             radians -= TAU;
         } else if (radians < -Math.PI) {
@@ -58,23 +57,16 @@ public class Angle {
     //      fromCartesian(0, -1) gives -90 degrees, fromCartesian(0, 0) throws an ArithmeticException.
     public static Angle fromCartesian(double x, double y) {
         double radians;
-        if (y < 0) {
-            // Northern hemicircle
+        if (y < 0) {              // Northern hemicircle
             radians = -Math.atan(x / y);
-        } else if (y > 0) {
-            // Southern hemicircle
-            // Note that the south-west quadrant gives results in range (180, 270) 
-        	// -- this will be normalised to (-180, -90) by Angle constructor.
+        } else if (y > 0) {       // Southern hemicircle
             radians = TAU / 2 - Math.atan(x / y);
-        } else { // (y == 0)
-            if (x > 0) {
-                // East
+        } else {  // (y == 0)
+            if (x > 0) {          // East
                 radians = TAU / 4;
-            } else if (x < 0) {
-                // West
+            } else if (x < 0) {   // West
                 radians = -TAU / 4;
-            } else {
-                // X and Y are both 0; no angle
+            } else {              // X and Y are both 0; no angle
                 throw new ArithmeticException("Angle.fromCartesian: x and y are both 0");
             }
         }
@@ -111,11 +103,10 @@ public class Angle {
     // If abs(angle) is smaller than "max", just returns the angle.
     // If the angle is greater than "max", returns the maximum angle in the give direction.
     public Angle limit(double max) {
-        if (Math.abs(this.radians) < Math.abs(max)) {
-            // Within limit; return the angle
-            return this;
-        } else {
-            // Too far; return maximum with the sign of this angle
+        if (Math.abs(this.radians) < Math.abs(max)) {  // within limit
+            return this;  // return the angle
+        } else {  // too far
+            // return maximum with the sign of this angle
             return new Angle(Math.copySign(max, this.radians));
         }
     }

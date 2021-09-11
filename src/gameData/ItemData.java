@@ -45,11 +45,7 @@ public class ItemData {
 			{BOOST, 1926, 3510}, 
 			{TOMATO, 1422, 2322}};
 	
-	// Number of milliseconds for the kart to spin.
-    public static final int SPIN_TIME = 700;
-    
-    // Number of milliseconds for the kart to boost.
-    public static final int BOOST_TIME = 3000;
+	
     
     // Speed of tomato projectile (in px/ms).
     public static final double TOMATO_SPEED = 1.7;
@@ -58,4 +54,20 @@ public class ItemData {
 	public static int[] getItem(int i) {
 		return items[i];
 	}
+	
+	public static String getItemImgPath(int itemId) {
+    	if(itemId == OILCAN) {
+			return OILCAN_PATH;
+		} else if(itemId == TOMATO) {
+			return TOMATO_PATH;
+		} else if(itemId == BOOST) {
+			return BOOST_PATH;
+		} else if(itemId == OILSLICK) {
+			return OILSLICK_PATH;
+		} else if (itemId == TOMATO_PROJ){
+			return TOMATO_PROJ_PATH;
+		} else {
+			return "";
+		}
+    }
 }

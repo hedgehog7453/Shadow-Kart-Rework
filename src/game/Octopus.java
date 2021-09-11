@@ -9,20 +9,28 @@ import org.newdawn.slick.SlickException;
 
 import gameData.GameData;
 import gameData.KartData;
+import gameData.KartData.Animal;
 import gameData.WayPoints;
+import helpers.Angle;
+import helpers.Calculator;
 
 // Represents octopus enemy
 public class Octopus extends Enemy {
 	
 	// Create an octopus
-	public Octopus(double x, double y, Angle angle, String imgPath) throws SlickException {
-		super(x, y, angle, imgPath);
+	public Octopus() throws SlickException {
+		super(Animal.OCTOPUS, Angle.fromDegrees(0));
 	}
 	
 	// Update the octopus for a frame.
-	public void update(Player player, Elephant elephant, Dog dog, World world) {
+	public void update(World world) {
+		
+		Player player = world.getPlayer();
+		Elephant elephant = world.getElephant();
+		Dog dog = world.getDog(); 
+		
 		// Find the distance between the player and octopus.
-		double distance = world.calcDistance(x, y, player.getX(), player.getY());
+		double distance = Calculator.calcDistance(x, y, player.getX(), player.getY());
 		
 		// If the octopus is between 100 and 250 pixels away from the player, 
 		// rotation = the radian the octopus needs to rotate to face the player,
@@ -30,19 +38,18 @@ public class Octopus extends Enemy {
 		double rotation;
 		if (distance > KartData.DISTANCE_LOWER 
 				&& distance < KartData.DISTANCE_UPPER) {
-			rotation = world.calcAngle(x, y, player.getX(), player.getY());
+			rotation = Calculator.calcAngle(x, y, player.getX(), player.getY());
 			nextWayPt = nearestWayPt(world);
 		} else {
 			// Find the X and Y coordinates of the next target waypoint.
-			double wayPtX = wayPts.getWayPts(nextWayPt)[WayPoints.X_COORD];
-			double wayPtY = wayPts.getWayPts(nextWayPt)[WayPoints.Y_COORD];
+			double[] nextWp = getNextWayPt();
 			
 			// Find the rotation needed to make the kart facing next waypoint.
-			rotation = world.calcAngle(x, y, wayPtX, wayPtY);
+			rotation =  Calculator.calcAngle(x, y, nextWp[0], nextWp[1]);
 			
 			// If the distance between the kart and the waypoint is less than 250
 			// and there exists a next waypoint, add the index of next waypoint by 1.
-			double dist = world.calcDistance(x, y, wayPtX, wayPtY);
+			double dist = Calculator.calcDistance(x, y, nextWp[0], nextWp[1]);
 			if (dist <= GameData.WAYPT_DISTANCE && nextWayPt != WayPoints.NUM_WAYPTS-1) {
 				nextWayPt++;
 			}
@@ -52,9 +59,9 @@ public class Octopus extends Enemy {
 		boolean spin = spin(world);
 		if (spin) {
 			Angle rotateamount = new Angle(KartData.ROTATE_SPEED_SPIN);
-			angle = angle.add(rotateamount);
+			orientation = orientation.add(rotateamount);
 		} else {
-			rotate(angle.getRadians(), rotation);
+			rotate(rotation);
 		}
 		
 		// Determine the friction of the current location
@@ -69,12 +76,12 @@ public class Octopus extends Enemy {
         
      // if there is no collision and the intended destination is not a blocking tile, 
      		// move to the new position
-        double nextX = this.x + this.angle.getXComponent(amount);
-        double nextY = this.y + this.angle.getYComponent(amount);
-        if (world.calcDistance(nextX, nextY, player.getX(), player.getY()) < KartData.COLLIDE_DISTANCE ||
-        	world.calcDistance(nextX, nextY, elephant.getX(), elephant.getY()) < KartData.COLLIDE_DISTANCE ||
-        	world.calcDistance(nextX, nextY, dog.getX(), dog.getY()) < KartData.COLLIDE_DISTANCE ||
-       		world.blockingAt((int) nextX, (int) nextY)) {
+        double nextX = this.x + this.orientation.getXComponent(amount);
+        double nextY = this.y + this.orientation.getYComponent(amount);
+        if (Calculator.calcDistance(nextX, nextY, player.getX(), player.getY()) < KartData.COLLIDE_DISTANCE ||
+        		Calculator.calcDistance(nextX, nextY, elephant.getX(), elephant.getY()) < KartData.COLLIDE_DISTANCE ||
+        		Calculator.calcDistance(nextX, nextY, dog.getX(), dog.getY()) < KartData.COLLIDE_DISTANCE ||
+        		world.blockingAt((int) nextX, (int) nextY)) {
             this.velocity = 0;
         } else {
             this.x = nextX;
@@ -89,12 +96,12 @@ public class Octopus extends Enemy {
 	private int nearestWayPt(World world) {
 		double wpX = wayPts.getWayPts(0)[WayPoints.X_COORD];
 		double wpY = wayPts.getWayPts(0)[WayPoints.Y_COORD];
-		double min = world.calcDistance(x, y, wpX, wpY);
+		double min = Calculator.calcDistance(x, y, wpX, wpY);
 		int nearestWayPt = 0;
 		for (int i = 0; i < WayPoints.NUM_WAYPTS; i++) {
 			wpX = wayPts.getWayPts(i)[WayPoints.X_COORD];
 			wpY = wayPts.getWayPts(i)[WayPoints.Y_COORD];
-			if (world.calcDistance(x, y, wpX, wpY) < min) {
+			if (Calculator.calcDistance(x, y, wpX, wpY) < min) {
 				nearestWayPt=i;
 			}
 		}

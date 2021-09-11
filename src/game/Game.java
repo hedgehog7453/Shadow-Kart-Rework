@@ -41,25 +41,25 @@ public class Game extends BasicGame {
         Input input = gc.getInput();
 
         // Update the player's rotation and position based on key presses.
-        double rotate_dir = 0;
-        double move_dir = 0;
+        double rotateDir = 0;
+        double moveDir = 0;
         if (input.isKeyDown(Input.KEY_DOWN) || input.isKeyDown(Input.KEY_S)) {
-            move_dir -= 1;
+            moveDir -= 1;
         }
         if (input.isKeyDown(Input.KEY_UP) || input.isKeyDown(Input.KEY_W)) {
-            move_dir += 1;
+            moveDir += 1;
         }
         if (input.isKeyDown(Input.KEY_LEFT) || input.isKeyDown(Input.KEY_A)) {
-            rotate_dir -= 1;
+            rotateDir -= 1;
         }
         if (input.isKeyDown(Input.KEY_RIGHT) || input.isKeyDown(Input.KEY_D)) {
-            rotate_dir += 1;
+            rotateDir += 1;
         }
-        boolean use_item = input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL);
+        boolean useItem = input.isKeyDown(Input.KEY_LCONTROL) || input.isKeyDown(Input.KEY_RCONTROL);
 
         // Let World.update decide what to do with this data.
         for (int i=0; i<delta; i++) {
-            world.update(rotate_dir, move_dir, use_item);
+            world.update(rotateDir, moveDir, useItem);
         }
     }
 

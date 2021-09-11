@@ -9,32 +9,39 @@ import org.newdawn.slick.SlickException;
 
 import gameData.GameData;
 import gameData.KartData;
+import gameData.KartData.Animal;
 import gameData.WayPoints;
+import helpers.Angle;
+import helpers.Calculator;
 
 // Represents elephant enemy
 public class Elephant extends Enemy {
 	
     // Create an elephant
-	public Elephant(double x, double y, Angle angle, String imgPath) throws SlickException {
-		super(x, y, angle, imgPath);
+	public Elephant() throws SlickException {
+		super(Animal.ELEPHANT, Angle.fromDegrees(0));
 	}
 	
 	// Update the elephant for a frame.
-	public void update(Player player, Dog dog, Octopus octopus, World world) {
+	public void update(World world) {
+		
+		Player player = world.getPlayer();
+		Dog dog = world.getDog();
+		Octopus octopus = world.getOctopus(); 
+		
 		// Find the X and Y coordinates of the next target waypoint.
-		double wayPtX = wayPts.getWayPts(nextWayPt)[WayPoints.X_COORD];
-		double wayPtY = wayPts.getWayPts(nextWayPt)[WayPoints.Y_COORD];
+		double[] nextWp = getNextWayPt();
 		
 		// Find the rotation needed to make the kart facing next waypoint.
-		double rotation = world.calcAngle(x, y, wayPtX, wayPtY);
+		double rotation = Calculator.calcAngle(x, y, nextWp[0], nextWp[1]);
 		
 		// Rotate the kart.
 		boolean spin = spin(world);
 		if (spin) {
 			Angle rotateamount = new Angle(KartData.ROTATE_SPEED_SPIN);
-			angle = angle.add(rotateamount);
+			orientation = orientation.add(rotateamount);
 		} else {
-			rotate(angle.getRadians(), rotation);
+			rotate(rotation);
 		}
 		
         // Determine the friction of the current location
@@ -49,12 +56,12 @@ public class Elephant extends Enemy {
         // if there is no collision and the intended destination is not a blocking tile,
         // move to the new position
         // 
-        double nextX = this.x + this.angle.getXComponent(amount);
-        double nextY = this.y + this.angle.getYComponent(amount);
-        if (world.calcDistance(nextX, nextY, player.getX(), player.getY()) < KartData.COLLIDE_DISTANCE ||
-        	world.calcDistance(nextX, nextY, dog.getX(), dog.getY()) < KartData.COLLIDE_DISTANCE ||
-        	world.calcDistance(nextX, nextY, octopus.getX(), octopus.getY()) < KartData.COLLIDE_DISTANCE ||
-        	world.blockingAt((int) nextX, (int) nextY)) {
+        double nextX = this.x + this.orientation.getXComponent(amount);
+        double nextY = this.y + this.orientation.getYComponent(amount);
+        if (Calculator.calcDistance(nextX, nextY, player.getX(), player.getY()) < KartData.COLLIDE_DISTANCE ||
+        		Calculator.calcDistance(nextX, nextY, dog.getX(), dog.getY()) < KartData.COLLIDE_DISTANCE ||
+        		Calculator.calcDistance(nextX, nextY, octopus.getX(), octopus.getY()) < KartData.COLLIDE_DISTANCE ||
+        		world.blockingAt((int) nextX, (int) nextY)) {
         	this.velocity = 0;
         } else {
         	this.x = nextX;
@@ -63,7 +70,7 @@ public class Elephant extends Enemy {
 		
         // If the distance between the kart and the waypoint is less than 250
         // and there exists a next waypoint, add the index of next waypoint by 1.
-        double dist = world.calcDistance(x, y, wayPtX, wayPtY);
+        double dist = Calculator.calcDistance(x, y, nextWp[0], nextWp[1]);
 		if (dist <= GameData.WAYPT_DISTANCE && nextWayPt != WayPoints.NUM_WAYPTS-1) {
 			nextWayPt++;
 		}
