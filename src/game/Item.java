@@ -76,7 +76,13 @@ public class Item extends GameObject {
 	}
 	
 	// Update the item except for tomato projectile. 
-	public void update(World world, Player player, Elephant elephant, Dog dog, Octopus octopus) {
+	public void update(World world) {
+		
+		Player player = world.getPlayer();
+		Elephant elephant = world.getElephant();
+		Dog dog = world.getDog();
+		Octopus octopus = world.getOctopus();
+		
 		// If the distance between the player and item is less than 40 pixels, 
 		// and the item is not a hazard, the player can pick up the item.
 		if (checkDistance(world, player.getX(), player.getY())) {
@@ -108,7 +114,12 @@ public class Item extends GameObject {
 	}
 	
 	// Update projectile tomato.
-	public void updateTomato(World world, Player player, Elephant elephant, Dog dog, Octopus octopus) {
+	public void updateTomato(World world) {
+		Player player = world.getPlayer();
+		Elephant elephant = world.getElephant();
+		Dog dog = world.getDog();
+		Octopus octopus = world.getOctopus();
+		
 		Angle direction = player.getAngle();
 		// Compute the next position. 
 		double nextX = this.x + direction.getXComponent(ItemData.TOMATO_SPEED);

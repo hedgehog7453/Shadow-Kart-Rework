@@ -17,7 +17,6 @@ public abstract class Kart extends GameObject {
 
 	// Type of animal
 	protected Animal type;
-
 	
     // Angle the kart is currently facing
     protected Angle orientation;
@@ -42,18 +41,9 @@ public abstract class Kart extends GameObject {
     	this.boostTime = KartData.BOOST_TIME + 1;
     }
     
-    // Draw the kart to the screen at the correct place.
-    public void render(Graphics g, Camera camera) {
-        // Calculate the kart's on-screen location from the camera
-        int screen_x = (int) (x - camera.getLeft());
-        int screen_y = (int) (y - camera.getTop());
-        img.setRotation((float) orientation.getDegrees());
-        img.drawCentered(screen_x, screen_y);
-    }
-    
     // Count down the number of milliseconds for the kart to spin and 
     // decide if the kart continues spinning in this millisecond. 
-    protected boolean spin(World world) {
+    protected boolean spin() {
     	if (spinTime == 0) {
     		spinTime = KartData.SPIN_TIME + 1;
     		return false;
@@ -66,7 +56,7 @@ public abstract class Kart extends GameObject {
 	}
     
     // Count down the number of milliseconds for the kart to boost and 
-    protected boolean boost(World world) {
+    protected boolean boost() {
     	if (boostTime == 0) {
     		boostTime = KartData.BOOST_TIME + 1;
     		return false;
@@ -79,8 +69,22 @@ public abstract class Kart extends GameObject {
 	}
     
     // ====================================================================================
+    // = Rendering
+    // ====================================================================================
+    
+    // Draw the kart to the screen at the correct place.
+    public void render(Graphics g, Camera camera) {
+        // Calculate the kart's on-screen location from the camera
+        int screen_x = (int) (x - camera.getLeft());
+        int screen_y = (int) (y - camera.getTop());
+        img.setRotation((float) orientation.getDegrees());
+        img.drawCentered(screen_x, screen_y);
+    }
+    
+    // ====================================================================================
     // = Getters & Setters
     // ====================================================================================
+    
     // The angle the kart is facing
     public Angle getAngle() {
         return orientation;

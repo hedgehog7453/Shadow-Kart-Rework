@@ -134,9 +134,9 @@ public class World {
         	// If this item exists, use different update method depending on the item.
         	if (items[i].getExist()) {
         		if (items[i].getItemId() == ItemData.TOMATO_PROJ)
-        			items[i].updateTomato(this, player, elephant, dog, octopus);
+        			items[i].updateTomato(this);
         		else
-        			items[i].update(this, player, elephant, dog, octopus);
+        			items[i].update(this);
         	}
         }
     }

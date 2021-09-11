@@ -7,15 +7,11 @@ package gameData;
 
 public class WayPoints {
 	
-	// The index of X, Y coordinates of a waypoint
-	public static final int X_COORD = 0;
-	public static final int Y_COORD = 1;
-	
 	// Number of waypoints
 	public static final int NUM_WAYPTS = 48;
 	
 	// Array of all waypoints
-	private final double[][] WAY_PTS = new double[][] {
+	public static final double[][] WAY_PTS = new double[][] {
 									{1350, 12186},
 									{990,  11682},
 									{990,  11466},
@@ -66,7 +62,7 @@ public class WayPoints {
 									{1296, 0}};
 	
 	// Get the waypoint with index i
-	public double[] getWayPts(int i) {
+	public static double[] getWayPts(int i) {
 		return WAY_PTS[i];
 	}
 }

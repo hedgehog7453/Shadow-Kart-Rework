@@ -45,7 +45,7 @@ public class Octopus extends Enemy {
 			double[] nextWp = getNextWayPt();
 			
 			// Find the rotation needed to make the kart facing next waypoint.
-			rotation =  Calculator.calcAngle(x, y, nextWp[0], nextWp[1]);
+			rotation = Calculator.calcAngle(x, y, nextWp[0], nextWp[1]);
 			
 			// If the distance between the kart and the waypoint is less than 250
 			// and there exists a next waypoint, add the index of next waypoint by 1.
@@ -56,7 +56,7 @@ public class Octopus extends Enemy {
 		}
 		
 		// Rotate the kart.
-		boolean spin = spin(world);
+		boolean spin = spin();
 		if (spin) {
 			Angle rotateamount = new Angle(KartData.ROTATE_SPEED_SPIN);
 			orientation = orientation.add(rotateamount);
@@ -94,13 +94,13 @@ public class Octopus extends Enemy {
 	 * @return the index of the nearest waypoint. 
 	 */
 	private int nearestWayPt(World world) {
-		double wpX = wayPts.getWayPts(0)[WayPoints.X_COORD];
-		double wpY = wayPts.getWayPts(0)[WayPoints.Y_COORD];
+		double wpX = WayPoints.getWayPts(0)[0];
+		double wpY = WayPoints.getWayPts(0)[1];
 		double min = Calculator.calcDistance(x, y, wpX, wpY);
 		int nearestWayPt = 0;
 		for (int i = 0; i < WayPoints.NUM_WAYPTS; i++) {
-			wpX = wayPts.getWayPts(i)[WayPoints.X_COORD];
-			wpY = wayPts.getWayPts(i)[WayPoints.Y_COORD];
+			wpX = WayPoints.getWayPts(i)[0];
+			wpY = WayPoints.getWayPts(i)[1];
 			if (Calculator.calcDistance(x, y, wpX, wpY) < min) {
 				nearestWayPt=i;
 			}

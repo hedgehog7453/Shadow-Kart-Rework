@@ -27,7 +27,7 @@ public class Elephant extends Enemy {
 		
 		Player player = world.getPlayer();
 		Dog dog = world.getDog();
-		Octopus octopus = world.getOctopus(); 
+		Octopus octopus = world.getOctopus();
 		
 		// Find the X and Y coordinates of the next target waypoint.
 		double[] nextWp = getNextWayPt();
@@ -36,7 +36,7 @@ public class Elephant extends Enemy {
 		double rotation = Calculator.calcAngle(x, y, nextWp[0], nextWp[1]);
 		
 		// Rotate the kart.
-		boolean spin = spin(world);
+		boolean spin = spin();
 		if (spin) {
 			Angle rotateamount = new Angle(KartData.ROTATE_SPEED_SPIN);
 			orientation = orientation.add(rotateamount);

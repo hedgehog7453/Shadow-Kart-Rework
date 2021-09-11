@@ -36,7 +36,7 @@ public class Dog extends Enemy {
 		double rotation = Calculator.calcAngle(x, y, nextWp[0], nextWp[1]);
 		
 		// Rotate the kart.
-		boolean spin = spin(world);
+		boolean spin = spin();
 		if (spin) {
 			Angle rotateamount = new Angle(KartData.ROTATE_SPEED_SPIN);
 			orientation = orientation.add(rotateamount);

@@ -77,6 +77,16 @@ public class Angle {
     // = Angle calculations
     // ====================================================================================
     
+    public int getDirection() {
+    	if (radians > 0) {
+    		return 1;
+    	} else if (radians < 0) {
+    		return -1;
+    	} else {
+    		return 0;
+    	}
+    }
+    
     // Get the angular measure, in radians.
     public double getRadians() {
         return radians;

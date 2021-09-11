@@ -36,28 +36,32 @@ public class Player extends Kart {
     }
     
     // Update the player for a frame.
-    public void update(double rotate_dir, double move_dir, World world) {
+    public void update(double rotateDir, double moveDir, World world) {
     	
     	Elephant elephant = world.getElephant();
     	Dog dog = world.getDog();
     	Octopus octopus = world.getOctopus();
     	
-        // Modify the player's angle
-    	boolean spinPlayer = spin(world);
-    	double rotateSpeed = spinPlayer ? KartData.ROTATE_SPEED_SPIN : KartData.ROTATE_SPEED * rotate_dir;
-    	Angle rotateamount = new Angle(rotateSpeed);
-        this.orientation = this.orientation.add(rotateamount);
+        // Update the player's orientation
+    	double rotateSpeed;
+    	if (spin()) {
+    		rotateSpeed = KartData.ROTATE_SPEED_SPIN;
+    	} else {
+    		rotateSpeed = KartData.ROTATE_SPEED * rotateDir;
+    	}
+    	Angle rotateAmount = new Angle(rotateSpeed);
+        this.orientation = this.orientation.add(rotateAmount);
+        
         // Determine the friction of the current location
         double friction = world.frictionAt((int) this.x, (int) this.y);
         // Update the player's velocity
         // increase due to acceleration
-        boolean boostPlayer = boost(world);
-        if (boostPlayer) {
+        if (boost()) {
         	this.velocity += KartData.BOOST_ACCELERATION;
-        } else if (spinPlayer) {
+        } else if (spin()) {
         	this.velocity += KartData.ACCELERATION;
         } else {
-        	this.velocity += KartData.ACCELERATION * move_dir;
+        	this.velocity += KartData.ACCELERATION * moveDir;
         }
         
         this.velocity *= 1 - friction; // reduce due to friction
